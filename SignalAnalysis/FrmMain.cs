@@ -3,7 +3,8 @@
 public partial class FrmMain : Form
 {
     // Program data
-    ClassSettings _settings = new();
+    AppSettings _settings = new();
+    private bool _settingsFileExist = true;
     SignalStats Results = new();
     SignalData Signal = new();
 
@@ -15,7 +16,7 @@ public partial class FrmMain : Form
     public FrmMain()
     {
         // Load settings
-        LoadProgramSettingsJSON();
+        LoadAppSettingsJSON();
 
         // Set form icon
         this.Icon = GraphicsResources.Load<Icon>(GraphicsResources.AppLogo);
@@ -24,7 +25,7 @@ public partial class FrmMain : Form
         InitializeComponent();
         InitializeToolStripPanel();
         InitializeStatusStrip();
-        InitializeMenu();
+        //InitializeMenu();
 
         PopulateComboWindow();
 
@@ -37,6 +38,9 @@ public partial class FrmMain : Form
 
         // Language initialization
         UpdateUI_Language();
+
+        // Modify window size and position
+        if (_settings.WindowPosition && _settingsFileExist) SetWindowPos();
     }
 
     private void FrmMain_Shown(object sender, EventArgs e)
@@ -67,7 +71,7 @@ public partial class FrmMain : Form
         }
 
         // Save settings data
-        SaveProgramSettingsJSON();
+        SaveAppSettingsJSON();
     }
 
     private void FrmMain_KeyPress(object sender, KeyPressEventArgs e)
@@ -213,7 +217,7 @@ public partial class FrmMain : Form
         plotBoxPlot.Refresh();
 
         plotWindow.CultureUI = _settings.AppCulture;
-        IWindow window = (IWindow)stripComboWindows.SelectedItem;
+        IWindow? window = (IWindow?)stripComboWindows.SelectedItem;
         if (window is not null)
             plotWindow.Plot.Title(String.Format(StringResources.PlotWindowTitle, window.Name));
         plotWindow.Plot.LeftAxis.Label(StringResources.PlotWindowYLabel);
@@ -272,11 +276,14 @@ public partial class FrmMain : Form
         // Update the results text
         if (txtStats.Text.Length > 0)
             txtStats.Text = Results.ToString(
-                _settings.AppCulture,
-                _settings.Boxplot,
-                _settings.Entropy,
-                _settings.ComputeIntegration,
-                _settings.ComputeIntegration ? StringResources.IntegrationAlgorithms.Split(", ")[(int)_settings.IntegrationAlgorithm] : string.Empty);
+                culture: _settings.AppCulture,
+                boxplot: _settings.Boxplot,
+                entropy: _settings.ComputeEntropy,
+                entropyAlgorithm: _settings.ComputeEntropy ? StringResources.EntropyAlgorithms.Split(", ")[(int)_settings.EntropyAlgorithm] : string.Empty,
+                entropyM: (int)_settings.EntropyFactorM,
+                entropyR: _settings.EntropyFactorR,
+                integral: _settings.ComputeIntegration,
+                integralAlgorithm: _settings.ComputeIntegration ? StringResources.IntegrationAlgorithms.Split(", ")[(int)_settings.IntegrationAlgorithm] : string.Empty);
 
         this.ResumeLayout();
     }

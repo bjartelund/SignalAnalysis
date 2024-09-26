@@ -1,6 +1,4 @@
-﻿using ScottPlot;
-using SignalAnalysis.NumericalAlgorithms;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace SignalAnalysis;
 
@@ -30,7 +28,7 @@ partial class FrmMain
         if (Signal.Data is null || Signal.Data.Length == 0) return;
         double[] signalClipped = Signal.Data[series][Signal.IndexStart..(Signal.IndexEnd + 1)];
         if (signalClipped is null || signalClipped.Length == 0) return;
-        string? seriesName = stripComboSeries.SelectedItem is null ? stripComboSeries.Items[0].ToString() : stripComboSeries.SelectedItem.ToString();
+        string? seriesName = stripComboSeries.SelectedItem is null ? stripComboSeries.Items[0]?.ToString() : stripComboSeries.SelectedItem.ToString();
 
         // Show waiting cursor
         var cursor = this.Cursor;
@@ -38,8 +36,8 @@ partial class FrmMain
         this.UseWaitCursor = true;
 
         // Compute data;
-        double[] signalWindowed = Array.Empty<double>();
-        IWindow? window = (IWindow)stripComboWindows.SelectedItem;
+        double[] signalWindowed = [];
+        IWindow? window = (IWindow?)stripComboWindows.SelectedItem;
         tokenSource?.Dispose();
         tokenSource = new();
         token = tokenSource.Token;
@@ -83,7 +81,7 @@ partial class FrmMain
                         case "CancelEntropy":
                             msg = StringResources.MsgBoxTaskEntropyCancel;
                             title = StringResources.MsgBoxTaskEntropyCancelTitle;
-                            _settings.Entropy = false;
+                            _settings.ComputeEntropy = false;
                             this.statusStripLabelExEntropy.Checked = false;
                             break;
                     }
@@ -126,11 +124,14 @@ partial class FrmMain
         // Show text results
         //if (stats || fractal || entropy || integral)
         txtStats.Text = Results.ToString(
-            _settings.AppCulture,
-            _settings.Boxplot,
-            _settings.Entropy,
-            _settings.ComputeIntegration,
-            _settings.ComputeIntegration ? StringResources.IntegrationAlgorithms.Split(", ")[(int)_settings.IntegrationAlgorithm] : string.Empty);
+            culture: _settings.AppCulture,
+            boxplot: _settings.Boxplot,
+            entropy: _settings.ComputeEntropy,
+            entropyAlgorithm: _settings.ComputeEntropy ? StringResources.EntropyAlgorithms.Split(", ")[(int)_settings.EntropyAlgorithm] : string.Empty,
+            entropyM: (int)_settings.EntropyFactorM,
+            entropyR: _settings.EntropyFactorR,
+            integral: _settings.ComputeIntegration,
+            integralAlgorithm: _settings.ComputeIntegration ? StringResources.IntegrationAlgorithms.Split(", ")[(int)_settings.IntegrationAlgorithm] : string.Empty);
 
         // Restore the cursor
         this.UseWaitCursor = false;
@@ -265,19 +266,62 @@ partial class FrmMain
     /// <param name="signal">1D data array whose values are expected to be uniformly spaced</param>
     private void ComputeEntropy(double[] signal)
     {
+        (Results.ApproximateEntropy, Results.SampleEntropy) = Complexity.Entropy_Parallel(signal, token, _settings.EntropyFactorM, _settings.EntropyFactorR);
+        (Results.ShannonEntropy, Results.EntropyBit, Results.IdealEntropy, Results.ShannonIdeal) = Complexity.ShannonEntropy(signal);
+
+
+#if DEBUG
+
         Stopwatch stopwatch = new();
+        
         stopwatch.Start();
         //(Results.ApproximateEntropy, Results.SampleEntropy) = Complexity.Entropy(signal, token);
         stopwatch.Stop();
         TimeSpan elapsed = stopwatch.Elapsed;
-        Debug.WriteLine($"Elapsed time - Parallel For: {elapsed.Hours} hours, {elapsed.Minutes} minutes, {elapsed.Seconds} seconds, and {elapsed.Milliseconds} milliseconds");
+        Debug.WriteLine($"Elapsed time - Normal: {elapsed.Hours} hours, {elapsed.Minutes} minutes, {elapsed.Seconds} seconds, and {elapsed.Milliseconds} milliseconds");
+        
         stopwatch.Restart();
-        (Results.ApproximateEntropy, Results.SampleEntropy) = Complexity.Entropy_Parallel(signal, token);
+        (Results.ApproximateEntropy, Results.SampleEntropy) = Complexity.Entropy(signal, token, _settings.EntropyFactorM, 0.15, 1);
         stopwatch.Stop();
         elapsed = stopwatch.Elapsed;
+        Debug.WriteLine($"ApEn: {Results.ApproximateEntropy}, SampEn: {Results.SampleEntropy}");
+        Debug.WriteLine($"Elapsed time: {elapsed.Hours} hours, {elapsed.Minutes} minutes, {elapsed.Seconds} seconds, and {elapsed.Milliseconds} milliseconds");
+
+        stopwatch.Restart();
+        //(Results.ApproximateEntropy, Results.SampleEntropy) = Complexity.Entropy_Parallel(signal, token, _settings.EntropyFactorM, _settings.EntropyFactorR);
+        (Results.ApproximateEntropy, Results.SampleEntropy) = Complexity.Entropy_Parallel(signal, token, _settings.EntropyFactorM, 0.15, 1);
+        stopwatch.Stop();
+        elapsed = stopwatch.Elapsed;
+        Debug.WriteLine($"ApEn: {Results.ApproximateEntropy}, SampEn: {Results.SampleEntropy}");
         Debug.WriteLine($"Elapsed time - Parallel For: {elapsed.Hours} hours, {elapsed.Minutes} minutes, {elapsed.Seconds} seconds, and {elapsed.Milliseconds} milliseconds");
 
-        (Results.ShannonEntropy, Results.EntropyBit, Results.IdealEntropy, Results.ShannonIdeal) = Complexity.ShannonEntropy(signal);
+        stopwatch.Restart();
+        //(Results.ApproximateEntropy, Results.SampleEntropy) = Complexity.Entropy_SuperFast(signal, token, EntropyMethod.BruteForce, _settings.EntropyFactorM, _settings.EntropyFactorR);
+        (Results.ApproximateEntropy, Results.SampleEntropy) = Complexity.Entropy_SuperFast(signal, token, EntropyMethod.BruteForce, _settings.EntropyFactorM, 0.15, 1);
+        stopwatch.Stop();
+        elapsed = stopwatch.Elapsed;
+        Debug.WriteLine($"ApEn: {Results.ApproximateEntropy}, SampEn: {Results.SampleEntropy}");
+        Debug.WriteLine($"Elapsed time - SuperFast ({EntropyMethod.BruteForce}): {elapsed.Hours} hours, {elapsed.Minutes} minutes, {elapsed.Seconds} seconds, and {elapsed.Milliseconds} milliseconds");
+
+        stopwatch.Restart();
+        //(Results.ApproximateEntropy, Results.SampleEntropy) = Complexity.Entropy_SuperFast(signal, token, EntropyMethod.BruteForce, _settings.EntropyFactorM, _settings.EntropyFactorR);
+        (Results.ApproximateEntropy, Results.SampleEntropy) = Complexity.Entropy_SuperFast(signal, token, EntropyMethod.MonteCarloUniform, _settings.EntropyFactorM, 0.15, 1);
+        stopwatch.Stop();
+        elapsed = stopwatch.Elapsed;
+        Debug.WriteLine($"ApEn: {Results.ApproximateEntropy}, SampEn: {Results.SampleEntropy}");
+        Debug.WriteLine($"Elapsed time - SuperFast ({EntropyMethod.MonteCarloUniform}): {elapsed.Hours} hours, {elapsed.Minutes} minutes, {elapsed.Seconds} seconds, and {elapsed.Milliseconds} milliseconds");
+
+        var apEnFast = Complexity.FastApEn_Cfun(signal, 2, 1, 0.15);
+        apEnFast = Complexity.FastSampEn_Cfun(signal, 2, 1, 0.15);
+
+        //stopwatch.Restart();
+        //(Results.ApproximateEntropy, Results.SampleEntropy) = Complexity.Entropy_SuperFast(signal, token, EntropyMethod.MonteCarloUniform, _settings.EntropyFactorM, _settings.EntropyFactorR);
+        //stopwatch.Stop();
+        //elapsed = stopwatch.Elapsed;
+        //Debug.WriteLine($"ApEn: {Results.ApproximateEntropy}, SampEn: {Results.SampleEntropy}");
+        //Debug.WriteLine($"Elapsed time - SuperFast ({EntropyMethod.MonteCarloUniform}): {elapsed.Hours} hours, {elapsed.Minutes} minutes, {elapsed.Seconds} seconds, and {elapsed.Milliseconds} milliseconds");
+#endif
+
     }
 
     /// <summary>
@@ -292,8 +336,8 @@ partial class FrmMain
         //IWindow window = (IWindow)stripComboWindows.SelectedItem;
         //if (window is null) return Array.Empty<double>();
 
-        double[] signalWindow = Array.Empty<double>();
-        System.Numerics.Complex[] spectrum = Array.Empty<System.Numerics.Complex>();
+        double[] signalWindow = [];
+        System.Numerics.Complex[] spectrum = [];
 
         // First, round down to the next integer (adjust to the lowest power of 2)
         int power2;

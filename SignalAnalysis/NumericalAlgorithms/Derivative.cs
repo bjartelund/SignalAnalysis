@@ -34,14 +34,9 @@ public interface IFunction<T>
 
 delegate double RealFunction<T>(T arg);
 
-class Function<T> : IFunction<T>
+class Function<T>(RealFunction<T> function) : IFunction<T>
 {
-    readonly RealFunction<T> func;
-
-    public Function(RealFunction<T> func)
-    {
-        this.func = func;
-    }
+    readonly RealFunction<T> func = function;
 
     public double this[T arg]
     {
@@ -138,6 +133,7 @@ public static class Derivative
     {
         double[] result = Derivate(Function, method, lowerIndex, upperIndex, upperIndex - lowerIndex);
 
+        // Adjust the result by the sampling frequency. This is only possible when data is uniformly spaced.
         for (int i = 0; i < result.Length; i++)
             result[i] *= samplingFrequency;
 
@@ -168,7 +164,7 @@ public static class Derivative
     /// <seealso cref="https://www.cantorsparadise.com/the-best-numerical-derivative-approximation-formulas-998703380948"/>
     private static double[] BackwardOnePoint(Func<double, double> function, double lowerLimit, double upperLimit, int segments = 1)
     {
-        if (segments == 0 || lowerLimit >= upperLimit) return Array.Empty<double>();
+        if (segments == 0 || lowerLimit >= upperLimit) return [];
 
         double[] result = new double[segments + 1];
         double step = (upperLimit - lowerLimit) / segments;
@@ -210,7 +206,7 @@ public static class Derivative
     /// <seealso cref="https://www.cantorsparadise.com/the-best-numerical-derivative-approximation-formulas-998703380948"/>
     private static double[] ForwardOnePoint(Func<double, double> function, double lowerLimit, double upperLimit, int segments = 1)
     {
-        if (segments == 0 || lowerLimit >= upperLimit) return Array.Empty<double>();
+        if (segments == 0 || lowerLimit >= upperLimit) return [];
 
         double[] result = new double[segments + 1];
         double step = (upperLimit - lowerLimit) / segments;
@@ -252,7 +248,7 @@ public static class Derivative
     /// <seealso cref="https://www.cantorsparadise.com/the-best-numerical-derivative-approximation-formulas-998703380948"/>
     private static double[] CenteredThreePoint(Func<double, double> function, double lowerLimit, double upperLimit, int segments = 1)
     {
-        if (segments == 0 || lowerLimit >= upperLimit) return Array.Empty<double>();
+        if (segments == 0 || lowerLimit >= upperLimit) return [];
 
         double[] result = new double[segments + 1];
         double step = (upperLimit - lowerLimit) / segments;
@@ -295,7 +291,7 @@ public static class Derivative
     /// <seealso cref="https://en.wikipedia.org/wiki/Finite_difference_coefficient"/>
     private static double[] CenteredFivePoint(Func<double, double> function, double lowerLimit, double upperLimit, int segments = 1)
     {
-        if (segments == 0 || lowerLimit >= upperLimit) return Array.Empty<double>();
+        if (segments == 0 || lowerLimit >= upperLimit) return [];
 
         double[] result = new double[segments + 1];
         double step = (upperLimit - lowerLimit) / segments;
@@ -342,7 +338,7 @@ public static class Derivative
     /// <seealso cref="https://en.wikipedia.org/wiki/Finite_difference_coefficient"/>
     private static double[] CenteredSevenPoint(Func<double, double> function, double lowerLimit, double upperLimit, int segments = 1)
     {
-        if (segments == 0 || lowerLimit >= upperLimit) return Array.Empty<double>();
+        if (segments == 0 || lowerLimit >= upperLimit) return [];
 
         double[] result = new double[segments + 1];
         double step = (upperLimit - lowerLimit) / segments;
@@ -393,7 +389,7 @@ public static class Derivative
     /// <seealso cref="https://en.wikipedia.org/wiki/Finite_difference_coefficient"/>
     private static double[] CenteredNinePoint(Func<double, double> function, double lowerLimit, double upperLimit, int segments = 1)
     {
-        if (segments == 0 || lowerLimit >= upperLimit) return Array.Empty<double>();
+        if (segments == 0 || lowerLimit >= upperLimit) return [];
 
         double[] result = new double[segments + 1];
         double step = (upperLimit - lowerLimit) / segments;
@@ -412,7 +408,7 @@ public static class Derivative
         result[segments - 3] = double.NaN;
         for (int j = 4; j < segments - 3; j++)
         {
-            result[j] = (function(x - step4) - function(x + step4) + (32 / 3) * (function(x + step3) - function(x - step3)) + 56 * (function(x - step2) - function(x + step2)) + 224 * (function(x + step) - function(x - step))) / (step * 280);
+            result[j] = (function(x - step4) - function(x + step4) + (32.0 / 3) * (function(x + step3) - function(x - step3)) + 56 * (function(x - step2) - function(x + step2)) + 224 * (function(x + step) - function(x - step))) / (step * 280);
             x += step;
         }
 
@@ -433,7 +429,7 @@ public static class Derivative
         double step2 = 2 * step;
         double step3 = 3 * step;
         double step4 = 4 * step;
-        return (function(abscissa - step4) - function(abscissa + step4) + (32 / 3) * (function(abscissa + step3) - function(abscissa - step3)) + 56 * (function(abscissa - step2) - function(abscissa + step2)) + 224 * (function(abscissa + step) - function(abscissa - step))) / (step * 280);
+        return (function(abscissa - step4) - function(abscissa + step4) + (32.0 / 3) * (function(abscissa + step3) - function(abscissa - step3)) + 56 * (function(abscissa - step2) - function(abscissa + step2)) + 224 * (function(abscissa + step) - function(abscissa - step))) / (step * 280);
     }
 
     /// <summary>
@@ -449,7 +445,7 @@ public static class Derivative
     /// <seealso cref="https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter"/>
     private static double[] SGLinearThreePoint(Func<double, double> function, double lowerLimit, double upperLimit, int segments = 1)
     {
-        if (segments == 0 || lowerLimit >= upperLimit) return Array.Empty<double>();
+        if (segments == 0 || lowerLimit >= upperLimit) return [];
 
         double[] result = new double[segments + 1];
         double step = (upperLimit - lowerLimit) / segments;
@@ -493,7 +489,7 @@ public static class Derivative
     /// <seealso cref="https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter"/>
     private static double[] SGLinearFivePoint(Func<double, double> function, double lowerLimit, double upperLimit, int segments = 1)
     {
-        if (segments == 0 || lowerLimit >= upperLimit) return Array.Empty<double>();
+        if (segments == 0 || lowerLimit >= upperLimit) return [];
 
         double[] result = new double[segments + 1];
         double step = (upperLimit - lowerLimit) / segments;
@@ -540,7 +536,7 @@ public static class Derivative
     /// <seealso cref="https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter"/>
     private static double[] SGLinearSevenPoint(Func<double, double> function, double lowerLimit, double upperLimit, int segments = 1)
     {
-        if (segments == 0 || lowerLimit >= upperLimit) return Array.Empty<double>();
+        if (segments == 0 || lowerLimit >= upperLimit) return [];
 
         double[] result = new double[segments + 1];
         double step = (upperLimit - lowerLimit) / segments;
@@ -591,7 +587,7 @@ public static class Derivative
     /// <seealso cref="https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter"/>
     private static double[] SGLinearNinePoint(Func<double, double> function, double lowerLimit, double upperLimit, int segments = 1)
     {
-        if (segments == 0 || lowerLimit >= upperLimit) return Array.Empty<double>();
+        if (segments == 0 || lowerLimit >= upperLimit) return [];
 
         double[] result = new double[segments + 1];
         double step = (upperLimit - lowerLimit) / segments;
@@ -647,7 +643,7 @@ public static class Derivative
     /// <seealso cref="https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter"/>
     private static double[] SGCubicFivePoint(Func<double, double> function, double lowerLimit, double upperLimit, int segments = 1)
     {
-        if (segments == 0 || lowerLimit >= upperLimit) return Array.Empty<double>();
+        if (segments == 0 || lowerLimit >= upperLimit) return [];
 
         double[] result = new double[segments + 1];
         double step = (upperLimit - lowerLimit) / segments;
@@ -695,7 +691,7 @@ public static class Derivative
     /// <seealso cref="https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter"/>
     private static double[] SGCubicSevenPoint(Func<double, double> function, double lowerLimit, double upperLimit, int segments = 1)
     {
-        if (segments == 0 || lowerLimit >= upperLimit) return Array.Empty<double>();
+        if (segments == 0 || lowerLimit >= upperLimit) return [];
 
         double[] result = new double[segments + 1];
         double step = (upperLimit - lowerLimit) / segments;
@@ -746,7 +742,7 @@ public static class Derivative
     /// <seealso cref="https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter"/>
     private static double[] SGCubicNinePoint(Func<double, double> function, double lowerLimit, double upperLimit, int segments = 1)
     {
-        if (segments == 0 || lowerLimit >= upperLimit) return Array.Empty<double>();
+        if (segments == 0 || lowerLimit >= upperLimit) return [];
 
         double[] result = new double[segments + 1];
         double step = (upperLimit - lowerLimit) / segments;

@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics;
 
 namespace SignalAnalysis;
@@ -15,7 +14,7 @@ public static class FractalDimension
     /// <summary>
     /// Hausdorff-Besicovitch dimension for each cumulative segment
     /// </summary>
-    public static double[] DimensionCumulative { get; private set; } = Array.Empty<double>();
+    public static double[] DimensionCumulative { get; private set; } = [];
 
     /// <summary>
     /// Hausdorff-Besicovitch dimension for the whole data set

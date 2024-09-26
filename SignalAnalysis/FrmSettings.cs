@@ -6,10 +6,11 @@ namespace SignalAnalysis;
 public partial class FrmSettings : Form
 {
     private CultureInfo _culture = CultureInfo.CurrentCulture;
-    private readonly ClassSettings? Settings;
-    private readonly string _baseName = "SignalAnalysis.localization.strings";
+    private readonly AppSettings? Settings;
+    private readonly string _baseName = StringResources.StringRM.BaseName;
     private int _derivativeAlgorithm;
     private int _integrationAlgorithm;
+    private int _entropyAlgorithm;
 
     public FrmSettings()
     {
@@ -17,13 +18,14 @@ public partial class FrmSettings : Form
         FillDefinedCultures(_baseName, typeof(FrmSettings).Assembly);
     }
 
-    public FrmSettings(ClassSettings settings)
+    public FrmSettings(AppSettings settings)
         : this()
     {
         Settings = settings;
         _culture = settings.AppCulture;
         _derivativeAlgorithm = (int)settings.DerivativeAlgorithm;
         _integrationAlgorithm = (int)settings.IntegrationAlgorithm;
+        _entropyAlgorithm = (int)settings.EntropyAlgorithm;
         UpdateControls(settings);
     }
 
@@ -57,7 +59,7 @@ public partial class FrmSettings : Form
         Settings.Boxplot = chkBoxplot.Checked;
         Settings.PowerSpectra = chkPower.Checked;
         Settings.CumulativeDimension = chkCumulative.Checked;
-        Settings.Entropy = chkEntropy.Checked;
+        Settings.ComputeEntropy = chkEntropy.Checked;
         Settings.CrossHair = chkCrossHair.Checked;
         Settings.FFTRoundUp = radUp.Checked;
 
@@ -65,6 +67,7 @@ public partial class FrmSettings : Form
         if (radPoints.Checked) Settings.AxisType = AxisType.Points;
         if (radTime.Checked) Settings.AxisType = AxisType.DateTime;
 
+        Settings.WindowPosition = chkWindowPos.Checked;
         Settings.RememberFileDialogPath = chkDlgPath.Checked;
         Settings.DataFormat = txtDataFormat.Text;
 
@@ -81,6 +84,13 @@ public partial class FrmSettings : Form
         Settings.AbsoluteIntegral = chkAbsolute.Checked;
         Settings.ExportIntegration = chkExportIntegration.Checked;
         Settings.IntegrationAlgorithm = (IntegrationMethod)_integrationAlgorithm;
+
+        // Entropy
+        if (!Validation.IsValidRange<int>(txtFactorM.Text, 1, 10, true, this)) { txtFactorM.Focus(); txtFactorM.SelectAll(); return; }
+        Settings.EntropyFactorM = Convert.ToUInt32(txtFactorM.Text);
+        if (!Validation.IsValidRange<double>(txtFactorR.Text, 0, 10, true, this)) { txtFactorR.Focus(); txtFactorR.SelectAll(); return; }
+        Settings.EntropyFactorR = Convert.ToDouble(txtFactorR.Text);
+        Settings.EntropyAlgorithm = (EntropyMethod)_entropyAlgorithm;
 
         DialogResult = DialogResult.OK;
     }
@@ -110,7 +120,7 @@ public partial class FrmSettings : Form
 
         if (DlgResult == DialogResult.Yes)
         {
-            UpdateControls(new ClassSettings());
+            UpdateControls(new AppSettings());
         }
     }
 
@@ -196,20 +206,26 @@ public partial class FrmSettings : Form
             _integrationAlgorithm = cbo.SelectedIndex;
     }
 
+    private void Entropy_SelectionChangeCommitted(object sender, EventArgs e)
+    {
+        var cbo = sender as ComboBox;
+        if (cbo is not null && cbo.Items.Count > 0 && cbo.SelectedIndex > -1)
+            _entropyAlgorithm = cbo.SelectedIndex;
+    }
+
     /// <summary>
     /// Updates the form's controls with values from the settings class
     /// </summary>
     /// <param name="settings">Class containing the values to show on the form's controls</param>
-    private void UpdateControls(ClassSettings settings)
+    private void UpdateControls(AppSettings settings)
     {
         txtStart.Text = settings.IndexStart.ToString();
         txtEnd.Text = settings.IndexEnd.ToString();
         chkBoxplot.Checked = settings.Boxplot;
         chkPower.Checked = settings.PowerSpectra;
         chkCumulative.Checked = settings.CumulativeDimension;
-        chkEntropy.Checked = settings.Entropy;
+        chkEntropy.Checked = settings.ComputeEntropy;
         chkCrossHair.Checked = settings.CrossHair;
-        chkDlgPath.Checked = settings.RememberFileDialogPath;
         radUp.Checked = settings.FFTRoundUp;
         radDown.Checked = !settings.FFTRoundUp;
 
@@ -236,6 +252,7 @@ public partial class FrmSettings : Form
             radUserCulture.Checked = true;
         }
 
+        chkWindowPos.Checked = settings.WindowPosition;
         chkDlgPath.Checked = settings.RememberFileDialogPath;
         txtDataFormat.Text = settings.DataFormat;
 
@@ -252,8 +269,11 @@ public partial class FrmSettings : Form
         chkExportIntegration.Enabled = settings.ComputeIntegration;
         lblIntegration.Enabled = settings.ComputeIntegration;
         cboIntegration.Enabled = settings.ComputeIntegration;
-        FillAlgorithms();
 
+        txtFactorM.Text = settings.EntropyFactorM.ToString();
+        txtFactorR.Text = settings.EntropyFactorR.ToString();
+
+        FillAlgorithms();
     }
 
     /// <summary>
@@ -263,7 +283,7 @@ public partial class FrmSettings : Form
     {
         if (Settings is null) return;
 
-        // Get the all the differentiation algorithms
+        // Get all the differentiation algorithms
         string[] strAlgorithms = StringResources.DifferentiationAlgorithms.Split(", ");
 
         cboAlgorithms.DisplayMember = "DisplayName";
@@ -271,12 +291,19 @@ public partial class FrmSettings : Form
         cboAlgorithms.DataSource = strAlgorithms;
         cboAlgorithms.SelectedIndex = _derivativeAlgorithm;
 
-        // Get the all the integration algorithms
+        // Get all the integration algorithms
         strAlgorithms = StringResources.IntegrationAlgorithms.Split(", ");
         cboIntegration.DisplayMember = "DisplayName";
         cboIntegration.ValueMember = "Value";
         cboIntegration.DataSource = strAlgorithms;
         cboIntegration.SelectedIndex = _integrationAlgorithm;
+
+        // Get all the entropy algorithms
+        strAlgorithms = StringResources.EntropyAlgorithms.Split(", ");
+        cboEntropyAlgorithm.DisplayMember = "DisplayName";
+        cboEntropyAlgorithm.ValueMember = "Value";
+        cboEntropyAlgorithm.DataSource = strAlgorithms;
+        cboEntropyAlgorithm.SelectedIndex = _entropyAlgorithm;
     }
 
     /// <summary>
@@ -324,6 +351,7 @@ public partial class FrmSettings : Form
         this.tabGUI.Text = StringResources.TabGUI;
         this.tabDerivative.Text = StringResources.TabDerivative;
         this.tabIntegration.Text = StringResources.TabIntegration;
+        this.tabEntropy.Text = StringResources.TabEntropy;
 
         this.lblStart.Text = StringResources.LblStart;
         this.lblEnd.Text = String.Format(StringResources.LblEnd, Settings?.IndexMax);
@@ -344,6 +372,7 @@ public partial class FrmSettings : Form
         this.radCurrentCulture.Text = StringResources.RadCurrentCulture + $" ({System.Globalization.CultureInfo.CurrentCulture.Name})";
         this.radInvariantCulture.Text = StringResources.RadInvariantCulture;
         this.radUserCulture.Text = StringResources.RadUserCulture;
+        this.chkWindowPos.Text = StringResources.ChkWindowPos;
         this.chkDlgPath.Text = StringResources.ChkDlgPath;
         this.lblDataFormat.Text = StringResources.LblDataFormat;
 
@@ -354,6 +383,11 @@ public partial class FrmSettings : Form
         this.chkAbsolute.Text = StringResources.ChkAbsoluteIntegral;
         this.chkExportIntegration.Text = StringResources.ChkExportIntegration;
         this.lblIntegration.Text = StringResources.LblIntegration;
+
+        this.lblEntropyAlgorithm.Text = StringResources.LblEntropy;
+        this.lblFactorM.Text = StringResources.LblFactorM;
+        this.lblFactorR.Text = StringResources.LblFactorR;
+
         FillAlgorithms();
 
         this.btnReset.Text = StringResources.BtnReset;
@@ -386,6 +420,15 @@ public partial class FrmSettings : Form
         this.radSeconds.Left = this.radPoints.Left;
         this.radTime.Left = this.radPoints.Left;
 
+        // Entropy tab
+        this.cboEntropyAlgorithm.Left = 5 + this.lblEntropyAlgorithm.Left + this.lblEntropyAlgorithm.Width;
+        width = Math.Max(this.lblFactorM.Width, this.lblFactorR.Width);
+        this.txtFactorM.Left = 5 + this.lblFactorM.Left + width;
+        this.txtFactorR.Left = 5 + this.lblFactorR.Left + width;
+
+        // User inferface tab
+        this.cboAllCultures.Left = 5 + this.radUserCulture.Left + this.radUserCulture.Width;
+        this.cboAllCultures.Width = Math.Min(190, grpCulture.Width - 2 * this.radUserCulture.Left - 5 - this.radUserCulture.Width);
         this.txtDataFormat.Left = 5 + this.lblDataFormat.Left + this.lblDataFormat.Width;
         this.lblDataFormat.Top = this.txtDataFormat.Top + (txtDataFormat.Height - lblDataFormat.Height) / 2;
     }

@@ -41,15 +41,15 @@ partial class FrmMain
         statusStripLabelExIntegration.Checked = _settings.ComputeIntegration;
         statusStripLabelExCumulative.Checked = _settings.CumulativeDimension;
         statusStripLabelExPower.Checked = _settings.PowerSpectra;
-        statusStripLabelExEntropy.Checked = _settings.Entropy;
+        statusStripLabelExEntropy.Checked = _settings.ComputeEntropy;
         statusStripLabelExCrossHair.Checked = _settings.CrossHair;
     }
 
-    /// <summary>
-    /// Initialize the main menu
-    /// </summary>
-    private void InitializeMenu()
-    {
+    ///// <summary>
+    ///// Initialize the main menu
+    ///// </summary>
+    //private void InitializeMenu()
+    //{
 
-    }
+    //}
 }

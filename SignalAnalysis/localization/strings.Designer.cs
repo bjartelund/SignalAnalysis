@@ -263,6 +263,15 @@ namespace SignalAnalysis.localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remember window position and size on startup.
+        /// </summary>
+        internal static string strChkWindowPos {
+            get {
+                return ResourceManager.GetString("strChkWindowPos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Backward one-point difference, Forward one-point difference, Central three-point difference, Central five-point difference, Central seven-point difference, Central nine-point difference, Savitzky–Golay linear three point, Savitzky–Golay linear five point, Savitzky–Golay linear seven point, Savitzky–Golay linear nine point, Savitzky–Golay cubic five point, Savitzky–Golay cubic seven point, Savitzky–Golay cubic nine point.
         /// </summary>
         internal static string strDifferentiationAlgorithms {
@@ -287,6 +296,15 @@ namespace SignalAnalysis.localization {
         internal static string strDlgResetTitle {
             get {
                 return ResourceManager.GetString("strDlgResetTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Brute force, Monte-Carlo.
+        /// </summary>
+        internal static string strEntropyAlgorithms {
+            get {
+                return ResourceManager.GetString("strEntropyAlgorithms", resourceCulture);
             }
         }
         
@@ -664,6 +682,33 @@ namespace SignalAnalysis.localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Entropy algorithm.
+        /// </summary>
+        internal static string strFileHeader39 {
+            get {
+                return ResourceManager.GetString("strFileHeader39", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entropy tolerance factor.
+        /// </summary>
+        internal static string strFileHeader40 {
+            get {
+                return ResourceManager.GetString("strFileHeader40", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entropy Embedding dimension.
+        /// </summary>
+        internal static string strFileHeader41 {
+            get {
+                return ResourceManager.GetString("strFileHeader41", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to : .
         /// </summary>
         internal static string strFileHeaderColon {
@@ -786,6 +831,33 @@ namespace SignalAnalysis.localization {
         internal static string strLblEnd {
             get {
                 return ResourceManager.GetString("strLblEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entropy algorithms.
+        /// </summary>
+        internal static string strLblEntropy {
+            get {
+                return ResourceManager.GetString("strLblEntropy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Embedding dimension.
+        /// </summary>
+        internal static string strLblFactorM {
+            get {
+                return ResourceManager.GetString("strLblFactorM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tolerance factor.
+        /// </summary>
+        internal static string strLblFactorR {
+            get {
+                return ResourceManager.GetString("strLblFactorR", resourceCulture);
             }
         }
         
@@ -1565,6 +1637,15 @@ namespace SignalAnalysis.localization {
         internal static string strTabDerivative {
             get {
                 return ResourceManager.GetString("strTabDerivative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entropy.
+        /// </summary>
+        internal static string strTabEntropy {
+            get {
+                return ResourceManager.GetString("strTabEntropy", resourceCulture);
             }
         }
         

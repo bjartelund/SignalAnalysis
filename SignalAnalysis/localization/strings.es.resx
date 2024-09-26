@@ -187,6 +187,9 @@ Si esta aplicación le resulta útil y práctica, por favor considere apoyarla m
   <data name="strChkPower" xml:space="preserve">
     <value>Espectro (dB)</value>
   </data>
+  <data name="strChkWindowPos" xml:space="preserve">
+    <value>Recordar el tamaño y la ubicación al inicio</value>
+  </data>
   <data name="strDifferentiationAlgorithms" xml:space="preserve">
     <value>Diferencia hacia atrás de 1 punto, Diferencia hacia adelante de 1 punto, Diferencias centrales de 3 puntos, Diferencias centrales de 5 puntos, Diferencias centrales de 7 puntos, Diferencias centrales de 9 puntos, Savitzky–Golay lineal de 3 puntos, Savitzky–Golay lineal de 5 puntos, Savitzky–Golay lineal de 7 puntos, Savitzky–Golay lineal de 9 puntos, Savitzky–Golay cúbico de 5 puntos, Savitzky–Golay cúbico de 7 puntos, Savitzky–Golay cúbico de 9 puntos</value>
   </data>
@@ -196,6 +199,9 @@ los campos a sus valores por defecto?</value>
   </data>
   <data name="strDlgResetTitle" xml:space="preserve">
     <value>¿Restablecer opciones?</value>
+  </data>
+  <data name="strEntropyAlgorithms" xml:space="preserve">
+    <value>Fuerza bruta, Monte Carlo</value>
   </data>
   <data name="strErrorDeserialize" xml:space="preserve">
     <value>Error al leer el archivo de configuración.
@@ -324,6 +330,15 @@ Se utilizarán los valores por defecto.</value>
   <data name="strFileHeader38" xml:space="preserve">
     <value>Shannon / Ideal</value>
   </data>
+  <data name="strFileHeader39" xml:space="preserve">
+    <value>Algoritmo para la entropía</value>
+  </data>
+  <data name="strFileHeader40" xml:space="preserve">
+    <value>Factor de tolerancia de la entropía</value>
+  </data>
+  <data name="strFileHeader41" xml:space="preserve">
+    <value>Dimensión de la entropía</value>
+  </data>
   <data name="strFileHeaderColon" xml:space="preserve">
     <value>: </value>
   </data>
@@ -365,6 +380,15 @@ Se utilizarán los valores por defecto.</value>
   </data>
   <data name="strLblEnd" xml:space="preserve">
     <value>Índice final (máx {0})</value>
+  </data>
+  <data name="strLblEntropy" xml:space="preserve">
+    <value>Algoritmos de entropía</value>
+  </data>
+  <data name="strLblFactorM" xml:space="preserve">
+    <value>Dimensión</value>
+  </data>
+  <data name="strLblFactorR" xml:space="preserve">
+    <value>Factor de tolerancia</value>
   </data>
   <data name="strLblIntegration" xml:space="preserve">
     <value>Algoritmos de cuadratura</value>
@@ -572,10 +596,10 @@ Hausdorff-Besicovitch se ha detenido.</value>
     <value>Puntos</value>
   </data>
   <data name="strRadRoundDown" xml:space="preserve">
-    <value>Añadir puntos</value>
+    <value>Recortar serie</value>
   </data>
   <data name="strRadRoundUp" xml:space="preserve">
-    <value>Recortar</value>
+    <value>Añadir valores 0</value>
   </data>
   <data name="strRadSeconds" xml:space="preserve">
     <value>Segundos</value>
@@ -638,6 +662,9 @@ Hausdorff-Besicovitch se ha detenido.</value>
   </data>
   <data name="strTabDerivative" xml:space="preserve">
     <value>Derivada</value>
+  </data>
+  <data name="strTabEntropy" xml:space="preserve">
+    <value>Entropía</value>
   </data>
   <data name="strTabGUI" xml:space="preserve">
     <value>Interfaz de usuario</value>

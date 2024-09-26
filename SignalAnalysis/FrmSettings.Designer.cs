@@ -61,7 +61,15 @@
             lblIntegration = new Label();
             chkExportIntegration = new CheckBox();
             chkComputeIntegration = new CheckBox();
+            tabEntropy = new TabPage();
+            cboEntropyAlgorithm = new ComboBox();
+            lblEntropyAlgorithm = new Label();
+            txtFactorR = new TextBox();
+            txtFactorM = new TextBox();
+            lblFactorM = new Label();
+            lblFactorR = new Label();
             tabGUI = new TabPage();
+            chkWindowPos = new CheckBox();
             txtDataFormat = new TextBox();
             lblDataFormat = new Label();
             grpCulture = new GroupBox();
@@ -77,6 +85,7 @@
             grpAxis.SuspendLayout();
             tabDerivative.SuspendLayout();
             tabIntegration.SuspendLayout();
+            tabEntropy.SuspendLayout();
             tabGUI.SuspendLayout();
             grpCulture.SuspendLayout();
             SuspendLayout();
@@ -106,6 +115,7 @@
             tabSettings.Controls.Add(tabPlot);
             tabSettings.Controls.Add(tabDerivative);
             tabSettings.Controls.Add(tabIntegration);
+            tabSettings.Controls.Add(tabEntropy);
             tabSettings.Controls.Add(tabGUI);
             tabSettings.Location = new Point(12, 14);
             tabSettings.Name = "tabSettings";
@@ -435,8 +445,75 @@
             chkComputeIntegration.UseVisualStyleBackColor = true;
             chkComputeIntegration.CheckedChanged += ComputeIntegration_CheckedChanged;
             // 
+            // tabEntropy
+            // 
+            tabEntropy.Controls.Add(cboEntropyAlgorithm);
+            tabEntropy.Controls.Add(lblEntropyAlgorithm);
+            tabEntropy.Controls.Add(txtFactorR);
+            tabEntropy.Controls.Add(txtFactorM);
+            tabEntropy.Controls.Add(lblFactorM);
+            tabEntropy.Controls.Add(lblFactorR);
+            tabEntropy.Location = new Point(4, 24);
+            tabEntropy.Name = "tabEntropy";
+            tabEntropy.Padding = new Padding(3);
+            tabEntropy.Size = new Size(472, 256);
+            tabEntropy.TabIndex = 4;
+            tabEntropy.Text = "Entropy";
+            tabEntropy.UseVisualStyleBackColor = true;
+            // 
+            // cboEntropyAlgorithm
+            // 
+            cboEntropyAlgorithm.FormattingEnabled = true;
+            cboEntropyAlgorithm.Location = new Point(131, 47);
+            cboEntropyAlgorithm.Name = "cboEntropyAlgorithm";
+            cboEntropyAlgorithm.Size = new Size(157, 25);
+            cboEntropyAlgorithm.TabIndex = 5;
+            cboEntropyAlgorithm.SelectionChangeCommitted += Entropy_SelectionChangeCommitted;
+            // 
+            // lblEntropyAlgorithm
+            // 
+            lblEntropyAlgorithm.AutoSize = true;
+            lblEntropyAlgorithm.Location = new Point(54, 50);
+            lblEntropyAlgorithm.Name = "lblEntropyAlgorithm";
+            lblEntropyAlgorithm.Size = new Size(70, 19);
+            lblEntropyAlgorithm.TabIndex = 4;
+            lblEntropyAlgorithm.Text = "Algorithm";
+            // 
+            // txtFactorR
+            // 
+            txtFactorR.Location = new Point(131, 138);
+            txtFactorR.Name = "txtFactorR";
+            txtFactorR.Size = new Size(100, 25);
+            txtFactorR.TabIndex = 3;
+            // 
+            // txtFactorM
+            // 
+            txtFactorM.Location = new Point(131, 94);
+            txtFactorM.Name = "txtFactorM";
+            txtFactorM.Size = new Size(100, 25);
+            txtFactorM.TabIndex = 2;
+            // 
+            // lblFactorM
+            // 
+            lblFactorM.AutoSize = true;
+            lblFactorM.Location = new Point(54, 97);
+            lblFactorM.Name = "lblFactorM";
+            lblFactorM.Size = new Size(61, 19);
+            lblFactorM.TabIndex = 1;
+            lblFactorM.Text = "M factor";
+            // 
+            // lblFactorR
+            // 
+            lblFactorR.AutoSize = true;
+            lblFactorR.Location = new Point(54, 141);
+            lblFactorR.Name = "lblFactorR";
+            lblFactorR.Size = new Size(56, 19);
+            lblFactorR.TabIndex = 0;
+            lblFactorR.Text = "R factor";
+            // 
             // tabGUI
             // 
+            tabGUI.Controls.Add(chkWindowPos);
             tabGUI.Controls.Add(txtDataFormat);
             tabGUI.Controls.Add(lblDataFormat);
             tabGUI.Controls.Add(grpCulture);
@@ -449,9 +526,19 @@
             tabGUI.Text = "User interface";
             tabGUI.UseVisualStyleBackColor = true;
             // 
+            // chkWindowPos
+            // 
+            chkWindowPos.AutoSize = true;
+            chkWindowPos.Location = new Point(23, 154);
+            chkWindowPos.Name = "chkWindowPos";
+            chkWindowPos.Size = new Size(319, 23);
+            chkWindowPos.TabIndex = 4;
+            chkWindowPos.Text = "Remember window size and position on startup";
+            chkWindowPos.UseVisualStyleBackColor = true;
+            // 
             // txtDataFormat
             // 
-            txtDataFormat.Location = new Point(260, 213);
+            txtDataFormat.Location = new Point(260, 214);
             txtDataFormat.Name = "txtDataFormat";
             txtDataFormat.Size = new Size(75, 25);
             txtDataFormat.TabIndex = 3;
@@ -459,7 +546,7 @@
             // lblDataFormat
             // 
             lblDataFormat.AutoSize = true;
-            lblDataFormat.Location = new Point(19, 216);
+            lblDataFormat.Location = new Point(19, 217);
             lblDataFormat.MaximumSize = new Size(320, 0);
             lblDataFormat.Name = "lblDataFormat";
             lblDataFormat.Size = new Size(201, 19);
@@ -474,7 +561,7 @@
             grpCulture.Controls.Add(radCurrentCulture);
             grpCulture.Location = new Point(24, 14);
             grpCulture.Name = "grpCulture";
-            grpCulture.Size = new Size(387, 155);
+            grpCulture.Size = new Size(400, 130);
             grpCulture.TabIndex = 0;
             grpCulture.TabStop = false;
             grpCulture.Text = "UI and data format";
@@ -484,7 +571,7 @@
             cboAllCultures.AutoCompleteMode = AutoCompleteMode.Suggest;
             cboAllCultures.Enabled = false;
             cboAllCultures.FormattingEnabled = true;
-            cboAllCultures.Location = new Point(40, 118);
+            cboAllCultures.Location = new Point(171, 93);
             cboAllCultures.Name = "cboAllCultures";
             cboAllCultures.Size = new Size(190, 25);
             cboAllCultures.TabIndex = 2;
@@ -493,7 +580,7 @@
             // radUserCulture
             // 
             radUserCulture.AutoSize = true;
-            radUserCulture.Location = new Point(18, 90);
+            radUserCulture.Location = new Point(18, 93);
             radUserCulture.Name = "radUserCulture";
             radUserCulture.Size = new Size(108, 23);
             radUserCulture.TabIndex = 3;
@@ -505,7 +592,7 @@
             // radInvariantCulture
             // 
             radInvariantCulture.AutoSize = true;
-            radInvariantCulture.Location = new Point(18, 58);
+            radInvariantCulture.Location = new Point(18, 60);
             radInvariantCulture.Name = "radInvariantCulture";
             radInvariantCulture.Size = new Size(196, 23);
             radInvariantCulture.TabIndex = 1;
@@ -517,7 +604,7 @@
             // radCurrentCulture
             // 
             radCurrentCulture.AutoSize = true;
-            radCurrentCulture.Location = new Point(18, 27);
+            radCurrentCulture.Location = new Point(18, 28);
             radCurrentCulture.Name = "radCurrentCulture";
             radCurrentCulture.Size = new Size(189, 23);
             radCurrentCulture.TabIndex = 0;
@@ -529,7 +616,7 @@
             // chkDlgPath
             // 
             chkDlgPath.AutoSize = true;
-            chkDlgPath.Location = new Point(23, 175);
+            chkDlgPath.Location = new Point(23, 183);
             chkDlgPath.Name = "chkDlgPath";
             chkDlgPath.Size = new Size(290, 23);
             chkDlgPath.TabIndex = 1;
@@ -576,6 +663,8 @@
             tabDerivative.PerformLayout();
             tabIntegration.ResumeLayout(false);
             tabIntegration.PerformLayout();
+            tabEntropy.ResumeLayout(false);
+            tabEntropy.PerformLayout();
             tabGUI.ResumeLayout(false);
             tabGUI.PerformLayout();
             grpCulture.ResumeLayout(false);
@@ -628,5 +717,13 @@
         private RadioButton radUp;
         private Label lblEntropy;
         private Label lblCumulative;
+        private TabPage tabEntropy;
+        private Label lblFactorM;
+        private Label lblFactorR;
+        private ComboBox cboEntropyAlgorithm;
+        private Label lblEntropyAlgorithm;
+        private TextBox txtFactorR;
+        private TextBox txtFactorM;
+        private CheckBox chkWindowPos;
     }
 }

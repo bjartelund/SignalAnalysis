@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -10,7 +10,7 @@
     <Version>$(VersionPrefix)1.5</Version>
     <Authors>Arthurits</Authors>
     <Company>Arthurits Ltd.</Company>
-    <Copyright>© 2021-2023</Copyright>
+    <Copyright>© 2021-2024</Copyright>
     <Description>Analysis tool featuring basic descriptive statistics, FFT (fast Fourier transform), fractal dimension, differentiation, integration, and entropy for signals (elux files as well as generic ones).
 
 No commercial use allowed whatsoever. Contact the author for any inquires.
@@ -19,7 +19,7 @@ If you find this software useful, please consider supporting it!</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ScottPlot.WinForms" Version="4.1.68" />
+    <PackageReference Include="ScottPlot.WinForms" Version="4.1.73" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,11 +38,17 @@ If you find this software useful, please consider supporting it!</Description>
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="examples\ApEn test - 11 pt.sig">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="examples\ApEn test - 21 pt.sig">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
     <None Update="examples\Artificial light test.elux">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="examples\Random set - 50 pt.sig">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="examples\Signal format template file.sig">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -111,7 +117,7 @@ If you find this software useful, please consider supporting it!</Description>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="SignalAnalysis launcher.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

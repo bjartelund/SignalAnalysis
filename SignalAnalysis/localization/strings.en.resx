@@ -187,6 +187,9 @@ If you find this software useful, please consider supporting it!</value>
   <data name="strChkPower" xml:space="preserve">
     <value>Power (dB)</value>
   </data>
+  <data name="strChkWindowPos" xml:space="preserve">
+    <value>Remember window position and size on startup</value>
+  </data>
   <data name="strDifferentiationAlgorithms" xml:space="preserve">
     <value>Backward one-point difference, Forward one-point difference, Central three-point difference, Central five-point difference, Central seven-point difference, Central nine-point difference, Savitzky–Golay linear three point, Savitzky–Golay linear five point, Savitzky–Golay linear seven point, Savitzky–Golay linear nine point, Savitzky–Golay cubic five point, Savitzky–Golay cubic seven point, Savitzky–Golay cubic nine point</value>
   </data>
@@ -196,6 +199,9 @@ to their default values?</value>
   </data>
   <data name="strDlgResetTitle" xml:space="preserve">
     <value>Reset settings?</value>
+  </data>
+  <data name="strEntropyAlgorithms" xml:space="preserve">
+    <value>Brute force, Monte-Carlo</value>
   </data>
   <data name="strErrorDeserialize" xml:space="preserve">
     <value>Error loading settings file.
@@ -324,6 +330,15 @@ Default values will be used instead.</value>
   <data name="strFileHeader38" xml:space="preserve">
     <value>Shannon / Ideal</value>
   </data>
+  <data name="strFileHeader39" xml:space="preserve">
+    <value>Entropy algorithm</value>
+  </data>
+  <data name="strFileHeader40" xml:space="preserve">
+    <value>Entropy tolerance factor</value>
+  </data>
+  <data name="strFileHeader41" xml:space="preserve">
+    <value>Entropy Embedding dimension</value>
+  </data>
   <data name="strFileHeaderColon" xml:space="preserve">
     <value>: </value>
   </data>
@@ -365,6 +380,15 @@ Default values will be used instead.</value>
   </data>
   <data name="strLblEnd" xml:space="preserve">
     <value>Array index end (max {0})</value>
+  </data>
+  <data name="strLblEntropy" xml:space="preserve">
+    <value>Entropy algorithms</value>
+  </data>
+  <data name="strLblFactorM" xml:space="preserve">
+    <value>Embedding dimension</value>
+  </data>
+  <data name="strLblFactorR" xml:space="preserve">
+    <value>Tolerance factor</value>
   </data>
   <data name="strLblIntegration" xml:space="preserve">
     <value>Quadrature algorithms</value>
@@ -634,6 +658,9 @@ dimension has been stopped.</value>
   </data>
   <data name="strTabDerivative" xml:space="preserve">
     <value>Differentiation</value>
+  </data>
+  <data name="strTabEntropy" xml:space="preserve">
+    <value>Entropy</value>
   </data>
   <data name="strTabGUI" xml:space="preserve">
     <value>User interface</value>
